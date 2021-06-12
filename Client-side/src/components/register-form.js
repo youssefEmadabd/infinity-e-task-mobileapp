@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     StyleSheet,
+    Alert,
 } from 'react-native'
 import { Button } from 'react-native-paper'
 
@@ -15,7 +16,8 @@ const loginValidationSchema = yup.object().shape({
         .required('username is Required'),
     password: yup
         .string()
-        .min(8, ({ min }) => `Password must be at least ${min} characters`)
+        .min(6, ({ min }) => `Password must be at least ${min} characters`)
+        .matches(/^[a-zA-Z0-9_.-]*$/, "password must contain numbers and letters")
         .required('Password is required'),
     email: yup
         .string()
@@ -52,99 +54,119 @@ const styles = StyleSheet.create({
 })
 
 export default function RegisterForm(props) {
-    return(
-    <View style={styles.loginContainer}>
-        <Text>Fill your info.</Text>
-        <Formik
-            validationSchema={loginValidationSchema}
-            initialValues={{ username: '', password: '',email:'', phone:'',firstname:'', lastname:'' }}
-            onSubmit={values => {console.log(values)
-                props.navigation.navigate('Profile')
-            }}
-        >
-            {({ handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                isValid, }) => (
-                <>
-                    <TextInput
-                        name="username"
-                        placeholder="Username"
-                        style={styles.textInput}
-                        onChangeText={handleChange('username')}
-                        onBlur={handleBlur('username')}
-                        value={values.username}
-                        keyboardType="default"
-                    />
-                    {errors.username &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+    function hasNumber(myString) {
+        return /\d/.test(myString);
+    }
+    function hasLetters(myString) {
+        return /[a-zA-Z]/.test(myString)
+    }
+    return (
+        <View style={styles.loginContainer}>
+            <Text>Fill your info.</Text>
+            <Formik
+                validationSchema={loginValidationSchema}
+                initialValues={{ username: '', password: '', email: '', phone: '', firstname: '', lastname: '' }}
+                onSubmit={values => {
+                    if (hasLetters(values.password) && hasNumber(values.password)) {
+                        console.log("here!!")
+                        console.log(values)
+                        props.navigation.navigate('Profile')
+
                     }
-                    <TextInput
-                        name="email"
-                        placeholder="email"
-                        style={styles.textInput}
-                        onChangeText={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        value={values.email}
-                        keyboardType="email-address"
-                    />
-                    {errors.email &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                    else {
+                        Alert.alert(
+                            "Password not acceptable",
+                            "Password must contain letters and numbers",
+                            [
+                                { text: "OK", onPress: () => console.log("OK Pressed") }
+                            ]
+                        );
                     }
-                    <TextInput
-                        name="phone"
-                        placeholder="phone"
-                        style={styles.textInput}
-                        onChangeText={handleChange('phone')}
-                        onBlur={handleBlur('phone')}
-                        value={values.phone}
-                        keyboardType="phone-pad"
-                    />
-                    {errors.phone &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.phone}</Text>
-                    }
-                    <TextInput
-                        name="firstname"
-                        placeholder="First Name"
-                        style={styles.textInput}
-                        onChangeText={handleChange('firstname')}
-                        onBlur={handleBlur('firstname')}
-                        value={values.firstname}
-                        keyboardType="default"
-                    />
-                    {errors.firstname &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.firstname}</Text>
-                    }
-                    <TextInput
-                        name="lastname"
-                        placeholder="Last name"
-                        style={styles.textInput}
-                        onChangeText={handleChange('lastname')}
-                        onBlur={handleBlur('lastname')}
-                        value={values.lastname}
-                        keyboardType="default"
-                    />
-                    {errors.lastname &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.lastname}</Text>
-                    }
-                    <TextInput
-                        name="password"
-                        placeholder="Password"
-                        style={styles.textInput}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                        secureTextEntry
-                    />
-                    {errors.password &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-                    }
-                    <Button onPress={handleSubmit} title="Submit" Text="Register"/>
-                </>
-            )}
-        </Formik>
-    </View>
+                }}
+            >
+                {({ handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    values,
+                    errors,
+                    isValid, }) => (
+                    <>
+                        <TextInput
+                            name="username"
+                            placeholder="Username"
+                            style={styles.textInput}
+                            onChangeText={handleChange('username')}
+                            onBlur={handleBlur('username')}
+                            value={values.username}
+                            keyboardType="default"
+                        />
+                        {errors.username &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+                        }
+                        <TextInput
+                            name="email"
+                            placeholder="email"
+                            style={styles.textInput}
+                            onChangeText={handleChange('email')}
+                            onBlur={handleBlur('email')}
+                            value={values.email}
+                            keyboardType="email-address"
+                        />
+                        {errors.email &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                        }
+                        <TextInput
+                            name="phone"
+                            placeholder="phone"
+                            style={styles.textInput}
+                            onChangeText={handleChange('phone')}
+                            onBlur={handleBlur('phone')}
+                            value={values.phone}
+                            keyboardType="phone-pad"
+                        />
+                        {errors.phone &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.phone}</Text>
+                        }
+                        <TextInput
+                            name="firstname"
+                            placeholder="First Name"
+                            style={styles.textInput}
+                            onChangeText={handleChange('firstname')}
+                            onBlur={handleBlur('firstname')}
+                            value={values.firstname}
+                            keyboardType="default"
+                        />
+                        {errors.firstname &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.firstname}</Text>
+                        }
+                        <TextInput
+                            name="lastname"
+                            placeholder="Last name"
+                            style={styles.textInput}
+                            onChangeText={handleChange('lastname')}
+                            onBlur={handleBlur('lastname')}
+                            value={values.lastname}
+                            keyboardType="default"
+                        />
+                        {errors.lastname &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.lastname}</Text>
+                        }
+                        <TextInput
+                            name="password"
+                            placeholder="Password"
+                            style={styles.textInput}
+                            onChangeText={handleChange('password')}
+                            onBlur={handleBlur('password')}
+                            value={values.password}
+                            secureTextEntry
+                        />
+                        {errors.password &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                        }
+                        <Button onPress={handleSubmit} title="Submit">Register</Button>
+                    </>
+                )}
+            </Formik>
+        </View>
     )
 }

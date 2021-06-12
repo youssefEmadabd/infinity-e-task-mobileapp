@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     StyleSheet,
+    Alert,
 } from 'react-native'
 import { Button } from 'react-native-paper'
 
@@ -15,7 +16,7 @@ const loginValidationSchema = yup.object().shape({
         .required('username is Required'),
     password: yup
         .string()
-        .min(8, ({ min }) => `Password must be at least ${min} characters`)
+        .min(6, ({ min }) => `Password must be at least ${min} characters`)
         .required('Password is required'),
 })
 const styles = StyleSheet.create({
@@ -40,51 +41,72 @@ const styles = StyleSheet.create({
 })
 
 export default function LoginForm(props) {
-    return(
-    <View style={styles.loginContainer}>
-        <Text>Welcome to Infinity-e, Please login</Text>
-        <Formik
-            validationSchema={loginValidationSchema}
-            initialValues={{ username: '', password: '' }}
-            onSubmit={values => {console.log(values)
-                props.navigation.navigate('Profile')
-            }}
-        >
-            {({ handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                isValid, }) => (
-                <>
-                    <TextInput
-                        name="username"
-                        placeholder="username"
-                        style={styles.textInput}
-                        onChangeText={handleChange('username')}
-                        onBlur={handleBlur('username')}
-                        value={values.username}
-                        keyboardType="default"
-                    />
-                    {errors.username &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+    function hasNumber(myString) {
+        return /\d/.test(myString);
+    }
+    function hasLetters(myString) {
+        return /[a-zA-Z]/.test(myString)
+    }
+    return (
+        <View style={styles.loginContainer}>
+            <Text>Welcome to Infinity-e, Please login</Text>
+            <Formik
+                validationSchema={loginValidationSchema}
+                initialValues={{ username: '', password: '' }}
+                onSubmit={values => {
+                    console.log(hasLetters(values.password) && hasNumber(values.password))
+                    if (hasLetters(values.password) && hasNumber(values.password)) {
+                        console.log("here!!")
+                        console.log(values)
+                        props.navigation.navigate('Profile')
+
                     }
-                    <TextInput
-                        name="password"
-                        placeholder="Password"
-                        style={styles.textInput}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                        secureTextEntry
-                    />
-                    {errors.password &&
-                        <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                    else {
+                        Alert.alert(
+                            "Password not acceptable",
+                            "Password must contain letters and numbers",
+                            [
+                                { text: "OK", onPress: () => console.log("OK Pressed") }
+                            ]
+                        );
                     }
-                    <Button onPress={handleSubmit} mode="contained" title="Submit">Login</Button>
-                </>
-            )}
-        </Formik>
-    </View>
+                }}
+            >
+                {({ handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    values,
+                    errors,
+                    isValid, }) => (
+                    <>
+                        <TextInput
+                            name="username"
+                            placeholder="username"
+                            style={styles.textInput}
+                            onChangeText={handleChange('username')}
+                            onBlur={handleBlur('username')}
+                            value={values.username}
+                            keyboardType="default"
+                        />
+                        {errors.username &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.username}</Text>
+                        }
+                        <TextInput
+                            name="password"
+                            placeholder="Password"
+                            style={styles.textInput}
+                            onChangeText={handleChange('password')}
+                            onBlur={handleBlur('password')}
+                            value={values.password}
+                            secureTextEntry
+                        />
+                        {errors.password &&
+                            <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                        }
+                        <Button onPress={handleSubmit} mode="contained" title="Submit">Login</Button>
+                    </>
+                )}
+            </Formik>
+        </View>
     )
 }
