@@ -6,6 +6,7 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
+import ProfileView from "../components/profile-view";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -22,9 +23,7 @@ export default function Profile({ navigation }) {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.container}>
-        <View style={styles.loginContainer}>
-          <Text>Profile</Text>
-        </View>
+        <ProfileView></ProfileView>
       </SafeAreaView>
     </>
   )

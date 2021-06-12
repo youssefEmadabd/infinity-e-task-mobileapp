@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": null,
   "packagerPort": 19000,
-  "expoServerNgrokUrl": "https://2k-rnf.anonymous.infinity-e-task-mobileapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.2k-rnf.anonymous.infinity-e-task-mobileapp.exp.direct",
-  "ngrokPid": 6272,
+  "expoServerNgrokUrl": "https://2k-rnf.anonymous.client-side.exp.direct",
+  "packagerNgrokUrl": "https://packager.2k-rnf.anonymous.client-side.exp.direct",
+  "ngrokPid": 1536,
   "packagerPid": null,
   "webpackServerPort": null
 }
